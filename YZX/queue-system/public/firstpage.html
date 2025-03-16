@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueueT - Welcome</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vollkorn', serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+            animation: changeBg 1.5s infinite steps(1);
+            overflow-x: hidden;
+        }
+
+        @keyframes changeBg {
+            0% { background-image: url('1.jpg'); }
+            33% { background-image: url('2.jpg'); }
+            66% { background-image: url('3.jpg'); }
+        }
+
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 50px 0;
+            position: relative;
+        }
+
+        .container {
+            background: white;
+            padding: 80px;
+            border: 2px solid black;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            width: 450px;
+            height: 700px;
+            position: relative;
+            left: 10%;
+            z-index: 2;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 4em;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            margin: 20px 0;
+            padding: 22px;
+            font-size: 1.5em;
+            background: gray;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 15px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: black;
+        }
+
+        .signup-btn {
+            display: block;
+            width: 100%;
+            padding: 22px;
+            font-size: 1.5em;
+            background: gray;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 15px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .signup-btn:hover {
+            background: black;
+        }
+
+        .or-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .or-text {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #666;
+            background: white;
+            padding: 0 10px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .line {
+            width: 100%;
+            height: 2px;
+            background: black;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: white;
+            font-size: 1.2em;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+
+        .about-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 0;
+            background-color: #fef9e8;
+            font-family: 'Vollkorn', serif;
+        }
+
+        .about-container {
+            background: white;
+            padding: 60px;
+            border-radius: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 85%;
+            max-width: 1200px;
+            display: flex;
+            flex-wrap: wrap;
+            font-family: 'Vollkorn', serif;
+        }
+
+        .about-content {
+            flex: 1;
+            padding-right: 40px;
+            min-width: 300px;
+            font-family: 'Vollkorn', serif;
+        }
+
+        .team-container {
+            flex: 0 0 300px;
+            padding-left: 40px;
+            border-left: 2px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-family: 'Vollkorn', serif;
+        }
+
+        .about-heading {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #333;
+            font-family: 'Vollkorn', serif;
+            font-weight: 700;
+        }
+
+        .highlight {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .about-text {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #555;
+            font-family: 'Vollkorn', serif;
+        }
+
+        .team-heading {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #333;
+            font-family: 'Vollkorn', serif;
+            font-weight: 700;
+        }
+
+        .team-list {
+            list-style: none;
+            font-family: 'Vollkorn', serif;
+        }
+
+        .team-list li {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+            font-family: 'Vollkorn', serif;
+        }
+
+        .team-list li::before {
+            content: "•";
+            color: #ff6b6b;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            gap: 20px;
+            font-family: 'Vollkorn', serif;
+        }
+
+        .feature {
+            flex: 1;
+            min-width: 200px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Vollkorn', serif;
+        }
+
+        .feature h3 {
+            margin: 10px 0;
+            color: #444;
+            font-family: 'Vollkorn', serif;
+            font-weight: 700;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 0.9em;
+            font-family: 'Vollkorn', serif;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 80%;
+                left: 10%;
+                padding: 40px;
+                height: auto;
+            }
+            
+            .about-container {
+                flex-direction: column;
+                padding: 30px;
+            }
+            
+            .about-content {
+                padding-right: 0;
+                margin-bottom: 40px;
+            }
+            
+            .team-container {
+                padding-left: 0;
+                border-left: none;
+                border-top: 2px solid #eee;
+                padding-top: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero-section">
+        <div class="container">
+            <h1>QUEUE T</h1>
+            
+            <!-- Login Button -->
+            <a href="/login" class="btn">LOG IN</a>
+            
+            <div class="or-container">
+                <div class="line"></div>
+                <span class="or-text">OR</span>
+            </div>
+            
+            <!-- Sign Up Button -->
+            <a href="/signuppage" class="signup-btn">SIGN UP</a>
+        </div>
+        <div class="scroll-indicator">
+            <div>Scroll down to learn more</div>
+            <div>↓</div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="about-container">
+            <div class="about-content">
+                <h2 class="about-heading">Reimagining Queue Management</h2>
+                <p class="about-text"><span class="highlight">Are you tired of waiting in lines?</span> Wasting precious hours standing in queues at banks, government offices, and healthcare facilities?</p>
+                <p class="about-text">QUEUE T transforms the traditional waiting experience into an efficient, stress-free process. Our innovative queue management system eliminates the need for physical waiting, allowing you to join virtual queues and track your position in real-time.</p>
+                <p class="about-text">Whether you're a business looking to streamline customer flow or an individual seeking to reclaim your time, QUEUE T offers the perfect solution to one of modern life's most persistent frustrations.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">⏱️</div>
+                        <h3>Time-Saving</h3>
+                        <p>Reclaim your time by joining queues remotely and receiving notifications when your turn approaches.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📊</div>
+                        <h3>Real-Time Tracking</h3>
+                        <p>Monitor your position in the queue and receive accurate waiting time estimates.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🔔</div>
+                        <h3>Smart Notifications</h3>
+                        <p>Get alerts when it's almost your turn, so you can arrive just in time.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-container">
+                <h3 class="team-heading">Created By</h3>
+                <ul class="team-list">
+                    <li>Inesh Roy</li>
+                    <li>Nandini Chakaravarthy</li>
+                    <li>Ponnambalam Vallinayagam</li>
+                    <li>Pragati Prasad</li>
+                    <li>Satvik Shrivastava</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueueT - Sign Up</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vollkorn', serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            animation: changeBg 1.5s infinite steps(1);
+            overflow: hidden;
+            padding: 50px 0;
+        }
+
+        @keyframes changeBg {
+            0% { background-image: url('1.jpg'); }
+            33% { background-image: url('2.jpg'); }
+            66% { background-image: url('3.jpg'); }
+        }
+
+        .container {
+            background: white;
+            padding: 60px;
+            border: 2px solid black;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            width: 450px;
+            height: 700px;
+            position: absolute;
+            left: 10%;
+            overflow-y: auto;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 4em;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid black;
+            border-radius: 10px;
+            font-size: 1.2em;
+        }
+
+        .signup-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 1.5em;
+            background: gray;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 15px;
+        }
+
+        .signup-btn:hover {
+            background: black;
+        }
+
+        .login-link {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .role-select {
+            margin: 15px 0;
+            font-size: 1.2em;
+            text-align: left;
+        }
+
+        .role-select label {
+            margin-right: 20px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 1.1em;
+            margin-top: 5px;
+            text-align: left;
+        }
+    </style>
+    <script>
+        function generateId() {
+            return Math.random().toString(36).substr(2, 9);
+        }
+        
+        function signUp() {
+            const username = document.getElementById("username").value;
+            const phone = document.getElementById("phone").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+            
+            // Clear previous error message
+            document.getElementById("error-message").textContent = "";
+
+            // Validate input
+            if (!username || !phone || !password || !confirmPassword) {
+                document.getElementById("error-message").textContent = "All fields are required!";
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                document.getElementById("error-message").textContent = "Passwords do not match!";
+                return;
+            }
+
+            try {
+                // For demo, we'll use localStorage to store user data
+                const users = JSON.parse(localStorage.getItem("users") || "[]");
+                
+                // Check if username already exists
+                if (users.some(user => user.username === username)) {
+                    document.getElementById("error-message").textContent = "Username already exists!";
+                    return;
+                }
+                
+                // Create new user
+                const newUser = {
+                    id: generateId(),
+                    username,
+                    phone,
+                    password,
+                    role
+                };
+                
+                // Add user to array and save back to localStorage
+                users.push(newUser);
+                localStorage.setItem("users", JSON.stringify(users));
+                
+                // Show success message and redirect
+                alert("Signup successful! Redirecting to login page...");
+                window.location.href = "/login";
+            } catch (error) {
+                console.error("Error during signup:", error);
+                document.getElementById("error-message").textContent = "An error occurred. Please try again.";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>QUEUE T</h1>
+        <input type="text" id="username" class="input-field" placeholder="User Name">
+        <input type="tel" id="phone" class="input-field" placeholder="Phone Number">
+        <input type="password" id="password" class="input-field" placeholder="Password">
+        <input type="password" id="confirmPassword" class="input-field" placeholder="Confirm Password">
+        
+        <div class="role-select">
+            <label>
+                <input type="radio" name="role" value="user" checked> User
+            </label>
+            <label>
+                <input type="radio" name="role" value="admin"> Admin
+            </label>
+        </div>
+        
+        <!-- Error Message -->
+        <div id="error-message" class="error-message"></div>
+        
+        <button class="signup-btn" onclick="signUp()">SIGN UP</button>
+        
+        <div class="login-link">
+            Already have an account? <a href="/login">Click here to Log in</a>
+        </div>
+    </div>
+</body>
+</html>

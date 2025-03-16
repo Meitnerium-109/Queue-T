@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - QueueT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            background-color: #ebe6db;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4c4c4c;
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #646464;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #beab6c;
+        }
+        .queue {
+            padding: 10px;
+            background: #fef9e8;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .queue h3 {
+            margin: 0;
+            color: #333;
+        }
+        .queue p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #beab6c;
+        }
+        .logout-btn:hover {
+            background-color: #beab6c;
+        }
+    </style>
+    <script>
+        // Check if user is logged in and is an admin
+        window.onload = function() {
+            const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+            if (!currentUser.id || currentUser.role !== "admin") {
+                alert("Please login as admin to access this page!");
+                window.location.href = "/login";
+                return;
+            }
+            
+            // Display username
+            document.getElementById("adminName").textContent = currentUser.username;
+            
+            // Load existing queues for this admin
+            loadQueues();
+        };
+        
+        function generateQueueCode() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+        
+        function loadQueues() {
+            const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+            const queues = JSON.parse(localStorage.getItem("queues") || "[]");
+            const adminQueues = queues.filter(queue => queue.adminId === currentUser.id);
+            
+            const queuesList = document.getElementById("queuesList");
+            queuesList.innerHTML = "";
+            
+            if (adminQueues.length === 0) {
+                queuesList.innerHTML = "<p>No queues created yet.</p>";
+                return;
+            }
+            
+            adminQueues.forEach(queue => {
+                const queueElement = document.createElement("div");
+                queueElement.className = "queue";
+                queueElement.innerHTML = `
+                    <h3>${queue.name}</h3>
+                    <p>Queue Code: <strong>${queue.code}</strong></p>
+                    <p>Status: ${queue.status}</p>
+                    <p>People in queue: ${queue.members.length}</p>
+                    <button onclick="toggleQueueStatus('${queue.id}')">
+                        ${queue.status === 'active' ? 'Pause Queue' : 'Activate Queue'}
+                    </button>
+                    <button onclick="nextCustomer('${queue.id}')">Next Customer</button>
+                    <button onclick="deleteQueue('${queue.id}')">Delete Queue</button>
+                `;
+                queuesList.appendChild(queueElement);
+            });
+        }
+        
+        function createQueue() {
+            const queueName = document.getElementById("queueName").value;
+            
+            if (!queueName) {
+                alert("Queue name is required!");
+                return;
+            }
+            
+            const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+            const queues = JSON.parse(localStorage.getItem("queues") || "[]");
+            
+            const newQueue = {
+                id: Date.now().toString(),
+                code: generateQueueCode(),
+                name: queueName,
+                adminId: currentUser.id,
+                status: "inactive", // inactive or active
+                members: [], // List of user IDs in the queue
+                currentPosition: 0, // Tracks the current position in the queue
+                createdAt: new Date().toISOString()
+            };
+            
+            queues.push(newQueue);
+            localStorage.setItem("queues", JSON.stringify(queues));
+            
+            alert(`Queue created successfully! Queue Code: ${newQueue.code}`);
+            
+            // Clear input
+            document.getElementById("queueName").value = "";
+            
+            // Reload queues
+            loadQueues();
+        }
+        
+        function toggleQueueStatus(queueId) {
+            const queues = JSON.parse(localStorage.getItem("queues") || "[]");
+            const queueIndex = queues.findIndex(q => q.id === queueId);
+            
+            if (queueIndex !== -1) {
+                queues[queueIndex].status = queues[queueIndex].status === 'active' ? 'inactive' : 'active';
+                localStorage.setItem("queues", JSON.stringify(queues));
+                loadQueues();
+            }
+        }
+        
+        function nextCustomer(queueId) {
+            const queues = JSON.parse(localStorage.getItem("queues") || "[]");
+            const queueIndex = queues.findIndex(q => q.id === queueId);
+            
+            if (queueIndex !== -1 && queues[queueIndex].members.length > 0) {
+                const queue = queues[queueIndex];
+                
+                // Remove first member from queue
+                queue.members.shift();
+                
+                // Increment current position
+                queue.currentPosition++;
+                
+                localStorage.setItem("queues", JSON.stringify(queues));
+                loadQueues();
+                
+                alert("Next customer called!");
+            } else {
+                alert("No customers in queue!");
+            }
+        }
+        
+        function deleteQueue(queueId) {
+            if (confirm("Are you sure you want to delete this queue?")) {
+                const queues = JSON.parse(localStorage.getItem("queues") || "[]");
+                const updatedQueues = queues.filter(q => q.id !== queueId);
+                localStorage.setItem("queues", JSON.stringify(updatedQueues));
+                loadQueues();
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem("currentUser");
+            window.location.href = "/";
+        }
+    </script>
+</head>
+<body>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome, <span id="adminName"></span>!</p>
+        
+        <div>
+            <h2>Create New Queue</h2>
+            <input type="text" id="queueName" placeholder="Enter queue name">
+            <button onclick="createQueue()">Create Queue</button>
+        </div>
+        
+        <div>
+            <h2>Your Queues</h2>
+            <div id="queuesList"></div>
+        </div>
+    </div>
+</body>
+</html>
